@@ -1,0 +1,48 @@
+name: cm3-installer
+version: '0.1'
+summary: Automated installation of cm3 in a specific lab environment
+description: |
+  You probably don't want this
+
+grade: devel
+confinement: devmode
+
+apps:
+  python:
+    command: python3
+  rpiboot:
+    command: rpiboot -d $SNAP/msd
+    plugs: [raw-usb, network-control]
+  cm3-installer:
+    command: bin/run-cm3-install
+
+parts:
+  automationhat:
+    plugin: python
+    python-packages:
+      - automationhat
+      - smbus-cffi
+    build-packages:
+      - python3-dev
+      - libffi-dev
+
+  rpiboot:
+    plugin: make
+    source: https://github.com/raspberrypi/usbboot.git
+    build: |
+      make
+    install: |
+      mkdir -p $SNAPCRAFT_PART_INSTALL/bin/
+      mv rpiboot $SNAPCRAFT_PART_INSTALL/bin/
+      cp -a msd $SNAPCRAFT_PART_INSTALL
+    build-packages:
+      - libusb-1.0-0-dev
+
+  stuff:
+    plugin: dump
+    source: cm3-installer-data
+    stage-packages:
+      - curl
+      - coreutils
+      - xz-utils
+

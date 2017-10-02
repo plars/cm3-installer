@@ -1,0 +1,15 @@
+#!/bin/bash
+set -ex
+
+echo "testing..."
+$SNAP/bin/rpiboot -d $SNAP/msd
+#http://cdimage.ubuntu.com/ubuntu-core/16/stable/current/ubuntu-core-16-cm3.img.xz
+echo "starting image download..."
+curl -L $1 |unxz -c |dd of=/dev/sda bs=4M oflag=sync
+sync
+partprobe /dev/sda
+mount /dev/sda2 /mnt
+cp -a $SNAP/extrausers /mnt/system-data/var/lib/
+mkdir -p /mnt/user-data/ubuntu
+chown -R 1000.1000 /mnt/user-data/ubuntu
+umount /mnt
