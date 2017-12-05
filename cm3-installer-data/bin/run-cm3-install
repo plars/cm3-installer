@@ -12,4 +12,6 @@ mount /dev/sda2 /mnt
 cp -a $SNAP/extrausers /mnt/system-data/var/lib/
 mkdir -p /mnt/user-data/ubuntu
 chown -R 1000.1000 /mnt/user-data/ubuntu
+mkdir -p /mnt/system-data/etc/sudoers.d
+echo 'ubuntu ALL=(ALL) NOPASSWD:ALL' > /mnt/system-data/etc/sudoers.d/ubuntu
 umount /mnt
