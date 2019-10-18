@@ -17,4 +17,8 @@ fi
 CLOUD_INIT_DIR=var/lib/cloud/seed/nocloud-net
 mkdir -p $BASE/$CLOUD_INIT_DIR
 cp $SNAP/cloud-data/* $BASE/$CLOUD_INIT_DIR
+# This needs to be removed on eoan for rpi, else cloud-init
+# won't find the user-data we give it and use one from
+# /boot/firmware/user-data instead
+rm -f $BASE/etc/cloud/cloud.cfg.d/99-fake_cloud.cfg
 umount /mnt
