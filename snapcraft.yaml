@@ -4,6 +4,7 @@ summary: Automated installation of cm3 in a specific lab environment
 description: |
   You probably don't want this
 
+base: core18
 grade: devel
 confinement: devmode
 
@@ -29,13 +30,12 @@ parts:
   rpiboot:
     plugin: make
     source: https://github.com/raspberrypi/usbboot.git
-    build: |
-      make
-    install: |
-      mkdir -p $SNAPCRAFT_PART_INSTALL/bin/
-      mv rpiboot $SNAPCRAFT_PART_INSTALL/bin/
-      cp -a msd $SNAPCRAFT_PART_INSTALL
+    override-prime: |
+      snapcraftctl prime
+      cp $SNAPCRAFT_PART_BUILD/rpiboot $SNAPCRAFT_PRIME/usr/bin/
+      cp -a $SNAPCRAFT_PART_BUILD/msd $SNAPCRAFT_PRIME
     build-packages:
+      - pkg-config
       - libusb-1.0-0-dev
 
   stuff:
@@ -44,5 +44,6 @@ parts:
     stage-packages:
       - curl
       - coreutils
+      - parted
       - xz-utils
 
