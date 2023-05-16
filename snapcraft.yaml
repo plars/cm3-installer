@@ -42,6 +42,8 @@ parts:
     build-packages:
       - pkg-config
       - libusb-1.0-0-dev
+    stage-packages:
+      - libusb-1.0-0
 
   stuff:
     plugin: dump
