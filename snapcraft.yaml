@@ -8,6 +8,11 @@ base: core18
 grade: devel
 confinement: devmode
 
+architectures:
+  - build-on: amd64
+  - build-on: arm64
+  - build-on: armhf
+
 apps:
   python:
     command: python3
