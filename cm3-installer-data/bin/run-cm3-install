@@ -3,7 +3,9 @@ set -ex
 
 echo "connecting emmc..."
 $SNAP/usr/bin/rpiboot -d $SNAP/msd
-#http://cdimage.ubuntu.com/ubuntu-core/16/stable/current/ubuntu-core-16-cm3.img.xz
+echo "Checking for disks..."
+sleep 10
+ls -l /dev/sd*
 echo "starting image download..."
 curl -Lf $1 |unxz -c |dd of=/dev/sda bs=4M oflag=sync
 sync
