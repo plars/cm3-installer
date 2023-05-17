@@ -1,5 +1,5 @@
 #!/bin/bash
-set -ex
+set -exo pipefail
 
 echo "connecting emmc..."
 $SNAP/usr/bin/rpiboot -d $SNAP/msd
