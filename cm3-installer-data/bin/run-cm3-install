@@ -7,6 +7,6 @@ echo "Checking for disks..."
 sleep 10
 ls -l /dev/sd*
 echo "starting image download..."
-curl -Lf $1 |unxz -c |dd of=/dev/sda bs=4M oflag=sync
+curl --http1.1 -Lf $1 |unxz -c |dd of=/dev/sda bs=4M oflag=sync
 sync
 partprobe /dev/sda

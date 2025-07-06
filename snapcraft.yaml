@@ -1,10 +1,10 @@
 name: cm3-installer
-version: '0.1'
+version: '0.2'
 summary: Automated installation of cm3 in a specific lab environment
 description: |
   You probably don't want this
 
-base: core18
+base: core20
 grade: devel
 confinement: devmode
 
@@ -14,36 +14,27 @@ architectures:
   - build-on: armhf
 
 apps:
-  python:
-    command: python3
   rpiboot:
-    command: rpiboot -d $SNAP/msd
+    command: usr/bin/rpiboot -d $SNAP/msd
     plugs: [raw-usb, network-control]
   cm3-installer:
     command: bin/run-cm3-install
 
 parts:
-  automationhat:
-    plugin: python
-    python-packages:
-      - automationhat
-      - smbus-cffi
-    build-packages:
-      - python3-dev
-      - libffi-dev
-
   rpiboot:
     plugin: make
     source: https://github.com/raspberrypi/usbboot.git
-    override-prime: |
-      snapcraftctl prime
-      cp $SNAPCRAFT_PART_BUILD/rpiboot $SNAPCRAFT_PRIME/usr/bin/
-      cp -a $SNAPCRAFT_PART_BUILD/msd $SNAPCRAFT_PRIME
     build-packages:
       - pkg-config
       - libusb-1.0-0-dev
     stage-packages:
       - libusb-1.0-0
+    override-build: |
+      snapcraftctl build
+      mkdir -p $SNAPCRAFT_PART_INSTALL/usr/bin
+      mkdir -p $SNAPCRAFT_PART_INSTALL/msd
+      cp rpiboot $SNAPCRAFT_PART_INSTALL/usr/bin/
+      cp -a msd/* $SNAPCRAFT_PART_INSTALL/msd/
 
   stuff:
     plugin: dump
