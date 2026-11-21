@@ -6,7 +6,16 @@ $SNAP/usr/bin/rpiboot -d $SNAP/msd
 echo "Checking for disks..."
 sleep 10
 ls -l /dev/sd*
+
+IMAGE_NAME=$(basename "${1%%\?*}")
+TMP_DIR=$(mktemp -d -p /tmp cm3-install.XXXXXX)
+trap 'rm -rf "$TMP_DIR"' EXIT
+TMP_FILE="$TMP_DIR/${IMAGE_NAME:-image.img.xz}"
+
 echo "starting image download..."
-curl --http1.1 -Lf $1 |unxz -c |dd of=/dev/sda bs=4M oflag=sync
+curl --http1.1 -Lf "$1" -o "$TMP_FILE"
+
+echo "flashing image to eMMC..."
+unxz -c "$TMP_FILE" | dd of=/dev/sda bs=4M oflag=sync
 sync
 partprobe /dev/sda
